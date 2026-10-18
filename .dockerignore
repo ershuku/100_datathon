@@ -1,0 +1,20 @@
+# Never ship dataset material, secrets or local state into the image (patterns match at any depth).
+open/
+data/
+**/.env
+**/.env.*
+!.env.example
+deploy.env
+**/*.mov
+**/*.MOV
+**/*.mp4
+**/*.docx
+**/*.xlsx
+team-skills/
+.git/
+.venv/
+**/__pycache__/
+.pytest_cache/
+frontend/node_modules/
+frontend/dist/
+.impeccable/

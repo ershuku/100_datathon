@@ -1,0 +1,34 @@
+.DS_Store
+open/videos/
+~$*
+/datathon-team-skills.zip
+
+# service
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+data/
+models/*
+!models/README.md
+frontend/node_modules/
+frontend/dist/
+deploy.env
+
+# Private experiments and local runtime
+local_annotations/
+.venv*/
+.workbook-build/
+.env.*
+
+# dataset & training artefacts (brief forbids sharing the data)
+open/
+*.xlsx
+datasets/
+runs/
+exports/
+*.pth
+*.ckpt
+dist/
+!.env.example

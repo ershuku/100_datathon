@@ -1,0 +1,8 @@
+# Training-only deps (Brev GPU box). The service image does not install these.
+# Torch comes from the Brev CUDA image; install a CUDA build first if it is missing.
+rfdetr[train,augment]==1.11.1
+transformers>=5.1,<6
+opencv-python-headless
+pillow
+cvat-sdk==2.77.0
+av==17.1.0

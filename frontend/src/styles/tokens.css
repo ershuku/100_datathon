@@ -1,0 +1,44 @@
+/* Contact sheet: film-base neutrals, paper ink, china-marker yellow for flags and selection only. */
+:root {
+  color-scheme: dark;
+
+  --base: #161616;
+  --strip: #0c0c0c;
+  --raised: #222221;
+  --frame: #2e2e2c;
+  --rule: #333331;
+  --rule-strong: #4a4a47;
+  --paper: #f3f3f0;
+  --paper-dim: #c9c9c3;
+  --ink-2: #a8a8a2;
+  --ink-3: #8c8c86;
+  --marker: #ffd23f;
+  --marker-ink: #1a1505;
+  --marker-wash: rgb(255 210 63 / 12%);
+  --safelight: #ff6a55;
+  --safelight-wash: rgb(255 106 85 / 10%);
+
+  --font: "Onest", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-hero: clamp(1.75rem, 1.2rem + 1.4vw, 2.25rem);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --gutter: clamp(16px, 2.8vw, 40px);
+
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 30%), 0 18px 40px -16px rgb(0 0 0 / 70%);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fast: 140ms;
+  --draw: 700ms;
+}

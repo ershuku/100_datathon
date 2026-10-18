@@ -1,0 +1,80 @@
+# For a self-managed GPU machine. On RunPod-style GPU pods compose is not used: run the image
+# directly (see DEPLOY.md, option A).
+#
+# Local / GPU VM:          docker compose up -d --build
+# + Caddy (HTTPS on VM):   docker compose --profile caddy up -d --build      (DOMAIN in deploy.env)
+# + Cloudflare Tunnel:     docker compose --profile tunnel up -d --build     (TUNNEL_TOKEN in deploy.env)
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: cashier-checker:0.1.0
+    env_file: .env  # app settings only; proxy secrets live in deploy.env
+    environment:
+      DATA_DIR: /data
+    user: "10001:10001"
+    volumes:
+      - jobs-data:/data
+    # Bound to localhost only: the public entry point is Caddy or the tunnel, never uvicorn directly.
+    ports:
+      - "127.0.0.1:8000:8000"
+    shm_size: "2gb"  # torch DataLoader / multiprocessing
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    logging: *logging
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+  caddy:
+    profiles: ["caddy"]
+    image: caddy:2.8.4-alpine
+    depends_on:
+      app:
+        condition: service_healthy
+    env_file:  # DOMAIN=check.example.kz (see deploy.env.example)
+      - path: deploy.env
+        required: false
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    security_opt: ["no-new-privileges:true"]
+    logging: *logging
+    restart: unless-stopped
+
+  tunnel:
+    profiles: ["tunnel"]
+    image: cloudflare/cloudflared:2025.1.0
+    depends_on:
+      app:
+        condition: service_healthy
+    command: tunnel --no-autoupdate run
+    env_file:  # TUNNEL_TOKEN=... (see deploy.env.example)
+      - path: deploy.env
+        required: false
+    security_opt: ["no-new-privileges:true"]
+    logging: *logging
+    restart: unless-stopped
+
+volumes:
+  jobs-data:
+  caddy-data:
+  caddy-config:

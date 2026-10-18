@@ -1,0 +1,1337 @@
+# Единый каталог: официальные источники, условия и совместимость с классами команды.
+version: 3
+verified_on: '2026-10-18'
+review_status: official_sources_checked_team_applicability_review_required
+policy:
+  inference_network_required: false
+  automatic_criminal_classification: false
+  matching: Тип — только кандидат. Перед возвратом события анализатор/проверяющий обязан проверить required_observations
+    и limitations выбранного правила. Сам каталог не анализирует видео.
+  team_review: Бага проверяет применимость, Ершуак — независимо; проверка официального текста не является их согласованием.
+sources:
+  NBRK_231:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    verified_via: Rendered official Adilet text
+    verified_on: '2026-10-18'
+    scope: Кассовые операции и инкассация
+  NBRK_14:
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    verified_via: Rendered official Adilet text
+    verified_on: '2026-10-18'
+    recheck_before: '2027-01-01'
+    scope: Организация охраны и устройство кассовых помещений; п. 16 — временная редакция
+  CRIMINAL_190:
+    document: Уголовный кодекс Республики Казахстан от 03.07.2014 № 226-V
+    url: https://adilet.zan.kz/rus/docs/K1400000226
+    punkt: ст. 190
+    verified_via: Official Adilet search index
+    verified_on: '2026-10-18'
+    scope: Справочная ссылка о мошенничестве, не автоматическое основание кассового события
+    auto_match: false
+    limitations: По видео нельзя установить все признаки преступления, умысел, обман или правовую квалификацию.
+  ARDFM_53:
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    verified_via: Rendered official Adilet text
+    verified_on: '2026-10-18'
+    scope: Учетные записи, сеансы, защита бумажных и электронных носителей; применимость зависит от контекста и
+      внутренних мер
+  AML_191:
+    document: Закон РК от 28.08.2009 № 191-IV — О противодействии легализации доходов, финансированию терроризма
+      и финансированию распространения оружия массового уничтожения
+    url: https://adilet.zan.kz/rus/docs/Z090000191_
+    verified_via: Official Adilet search index
+    verified_on: '2026-10-18'
+    scope: Контекстное основание; требуется проверка сведений вне видео
+    auto_match: false
+  BANKING_258:
+    document: Закон РК от 16.01.2026 № 258-VIII — О банках и банковской деятельности в Республике Казахстан
+    url: https://adilet.zan.kz/rus/docs/Z2600000258
+    verified_via: Official Adilet search index
+    verified_on: '2026-10-18'
+    scope: Контекстное основание; требуется проверка сведений вне видео
+    auto_match: false
+types:
+  ID:
+    name: Возможное отсутствие идентификации при приеме наличных
+    rule_id: CASH_ID_IN
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_ID_IN
+    - CASH_ID_OUT
+  THIRD:
+    name: Возможное несоответствие процедуры идентификации
+    rule_id: CASH_ID_IN
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_ID_IN
+    - CASH_ID_OUT
+  TABLE:
+    name: Ранее принятые наличные вне устройства хранения
+    rule_id: CASH_STORAGE
+    allowed_rule_ids:
+    - CASH_STORAGE
+  INCOMPLETE:
+    name: Прием или пересчет без присутствия клиента
+    rule_id: CASH_PRESENT
+    allowed_rule_ids:
+    - CASH_PRESENT
+  NOCOUNT:
+    name: Возможное отсутствие пересчета при приеме банкнот
+    rule_id: CASH_COUNT
+    allowed_rule_ids:
+    - CASH_COUNT
+    - CASH_EQUIPMENT
+  REJECT:
+    name: Возможное несоблюдение порядка работы с сомнительными банкнотами
+    rule_id: CASH_SUSPECT
+    allowed_rule_ids:
+    - CASH_SUSPECT
+  SAFE:
+    name: Возможное несоблюдение хранения наличных
+    rule_id: CASH_STORAGE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_STORAGE
+  EXIT:
+    name: Рабочая станция оставлена без блокировки — требуется проверка условий
+    rule_id: IS_SESSION_TIMEOUT
+    requires_rule_id: true
+    limitations: Короткий уход не доказывает превышение 30 минут неактивности; автоматическая ссылка по EXIT запрещена.
+    allowed_rule_ids:
+    - IS_SESSION_TIMEOUT
+  DOOR:
+    name: Возможное несоблюдение требований к входу кассы
+    rule_id: PREMISES_ACCESS
+    requires_rule_id: true
+    allowed_rule_ids:
+    - PREMISES_ACCESS
+  PERSONAL:
+    name: Возможное хранение личных вещей в кассовом узле
+    rule_id: CASH_PERSONAL
+    allowed_rule_ids:
+    - CASH_PERSONAL
+  RECEIPT_IN:
+    name: Возможное отсутствие документа о приеме наличных
+    rule_id: CASH_RECEIPT_IN
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_RECEIPT_IN
+  RECEIPT_OUT:
+    name: Возможное отсутствие документа о выдаче наличных
+    rule_id: CASH_RECEIPT_OUT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_RECEIPT_OUT
+  COUNT_OUT:
+    name: Возможное нарушение пересчета при выдаче наличных
+    rule_id: CASH_COUNT_OUT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_COUNT_OUT
+  MULTI_DEPOSIT:
+    name: Возможное смешивание сумм по отдельным приходным документам
+    rule_id: CASH_MULTI_DEPOSIT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_MULTI_DEPOSIT
+  CASH_HANDOVER:
+    name: Возможное нарушение передачи принятых наличных заведующему кассой
+    rule_id: CASH_HANDOVER
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_HANDOVER
+  END_DAY:
+    name: Возможное нарушение обработки остатка в конце рабочего дня
+    rule_id: CASH_END_DAY
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_END_DAY
+  RECOUNT_SUPERVISION:
+    name: Возможное отсутствие контроля при внутреннем пересчете
+    rule_id: CASH_RECOUNT_SUPERVISION
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_RECOUNT_SUPERVISION
+  SORTING:
+    name: Возможное нарушение сортировки наличных
+    rule_id: CASH_SORTING
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_SORTING
+  PACK_SEPARATE:
+    name: Возможное смешивание годных и негодных категорий при упаковке
+    rule_id: CASH_PACK_SEPARATE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_PACK_SEPARATE
+  NOTE_BAND:
+    name: Возможное нарушение формирования корешков банкнот
+    rule_id: CASH_NOTE_BAND
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_NOTE_BAND
+  NOTE_BUNDLE:
+    name: Возможное нарушение упаковки полных пачек
+    rule_id: CASH_NOTE_BUNDLE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_NOTE_BUNDLE
+  BUNDLE_SEAL:
+    name: Возможное нарушение скрепления и пломбирования пачки
+    rule_id: CASH_BUNDLE_SEAL
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_BUNDLE_SEAL
+  MERGE_RECOUNT:
+    name: Возможное отсутствие пересчета при объединении остатков
+    rule_id: CASH_MERGE_RECOUNT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_MERGE_RECOUNT
+  MIXED_BUNDLE:
+    name: Возможное нарушение оформления неполной или сборной пачки
+    rule_id: CASH_MIXED_BUNDLE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_MIXED_BUNDLE
+  COIN_SEAL:
+    name: Возможное нарушение закрытия и пломбирования мешка с монетами
+    rule_id: CASH_COIN_SEAL
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_COIN_SEAL
+  COIN_LABEL:
+    name: Возможное нарушение маркировки мешка с монетами
+    rule_id: CASH_COIN_LABEL
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_COIN_LABEL
+  ATM_CASSETTE:
+    name: Возможное нарушение закрытия или опечатывания кассеты
+    rule_id: CASH_ATM_CASSETTE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_ATM_CASSETTE
+  COUNTERFEIT_RETURN:
+    name: Возможный возврат банкнот с установленными признаками подделки
+    rule_id: CASH_COUNTERFEIT_RETURN
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_COUNTERFEIT_RETURN
+  VAULT_ACCESS:
+    name: Возможное несоблюдение допуска в кладовую или сейфовую комнату
+    rule_id: CASH_VAULT_ACCESS
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_VAULT_ACCESS
+  VAULT_STORAGE:
+    name: Возможное смешивание валют или номиналов при хранении
+    rule_id: CASH_VAULT_STORAGE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_VAULT_STORAGE
+  COLLECTION_BAG:
+    name: Возможное несоответствие инкассаторской упаковки
+    rule_id: COLLECTION_BAG_INTEGRITY
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_BAG_INTEGRITY
+  COLLECTION_DOCUMENT:
+    name: Возможное отсутствие препроводительного документа при инкассации
+    rule_id: COLLECTION_PACK_DOCUMENT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_PACK_DOCUMENT
+  COLLECTION_PICKUP:
+    name: Возможное отсутствие проверок сумки инкассатором-сборщиком
+    rule_id: COLLECTION_PICKUP_CHECK
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_PICKUP_CHECK
+  COLLECTION_HANDOVER:
+    name: Возможное отсутствие повторной проверки сумки старшим бригады
+    rule_id: COLLECTION_HANDOVER_CHECK
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_HANDOVER_CHECK
+  COLLECTION_CREW:
+    name: Возможное несоответствие состава инкассаторской бригады
+    rule_id: COLLECTION_CREW
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_CREW
+  COLLECTION_PROTECTION:
+    name: Возможное отсутствие предусмотренной экипировки инкассаторов
+    rule_id: COLLECTION_PROTECTION
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_PROTECTION
+  TRANSFER_DEVICE:
+    name: Возможное несоблюдение требований к устройству передачи наличных
+    rule_id: PREMISES_TRANSFER
+    requires_rule_id: true
+    allowed_rule_ids:
+    - PREMISES_TRANSFER
+  CASH_PARTITION:
+    name: Возможное отсутствие перегородок между кассами
+    rule_id: PREMISES_PARTITIONS
+    requires_rule_id: true
+    allowed_rule_ids:
+    - PREMISES_PARTITIONS
+  CASH_VIDEO:
+    name: Возможное несоответствие оснащения кассы видеонаблюдением
+    rule_id: PREMISES_VIDEO
+    requires_rule_id: true
+    allowed_rule_ids:
+    - PREMISES_VIDEO
+  SESSION_TIMEOUT:
+    name: Возможное отсутствие автоматического завершения или блокировки сеанса
+    rule_id: IS_SESSION_TIMEOUT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - IS_SESSION_TIMEOUT
+  PASSWORD_TRANSFER:
+    name: Возможная неправомерная передача пароля
+    rule_id: IS_PASSWORD_TRANSFER
+    requires_rule_id: true
+    allowed_rule_ids:
+    - IS_PASSWORD_TRANSFER
+  ACCOUNT_SHARING:
+    name: Возможная работа под чужой учетной записью
+    rule_id: IS_ACCOUNT_SHARING
+    requires_rule_id: true
+    allowed_rule_ids:
+    - IS_ACCOUNT_SHARING
+  PAPER_PROTECTION:
+    name: Возможное несоблюдение мер защиты бумажных документов
+    rule_id: IS_PAPER_PROTECTION
+    requires_rule_id: true
+    allowed_rule_ids:
+    - IS_PAPER_PROTECTION
+  EXTERNAL_MEDIA:
+    name: Возможное несоблюдение защиты при использовании внешнего носителя
+    rule_id: IS_EXTERNAL_MEDIA
+    requires_rule_id: true
+    allowed_rule_ids:
+    - IS_EXTERNAL_MEDIA
+  LEAVE:
+    name: Уход кассира до завершения обслуживания
+    rule_id: CASH_LEAVE
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_LEAVE
+  KEYS:
+    name: Возможное нарушение обращения с ключами
+    rule_id: CASH_KEYS
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_KEYS
+  BAG:
+    name: Возможное отсутствие проверки инкассаторской сумки
+    rule_id: CASH_BAG
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_BAG
+  ID_OUT:
+    name: Возможное отсутствие идентификации при выдаче
+    rule_id: CASH_ID_OUT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_ID_OUT
+  EQUIPMENT:
+    name: Возможное несоответствие оборудования проверки
+    rule_id: CASH_EQUIPMENT
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_EQUIPMENT
+  COLLECTION_ACCESS:
+    name: Возможное нарушение ограничения доступа в зоне инкассации
+    rule_id: COLLECTION_ACCESS
+    requires_rule_id: true
+    allowed_rule_ids:
+    - COLLECTION_ACCESS
+  DUE_DILIGENCE:
+    name: Возможная необходимость проверки надлежащей проверки клиента
+    rule_id: AML_DUE_DILIGENCE
+    requires_rule_id: true
+    context_only: true
+    allowed_rule_ids:
+    - AML_DUE_DILIGENCE
+  CUSTOMER_INFORMATION:
+    name: Возможное раскрытие охраняемой информации о клиенте
+    rule_id: BANK_SECRECY
+    requires_rule_id: true
+    context_only: true
+    allowed_rule_ids:
+    - BANK_SECRECY
+  CASH_RETURN:
+    name: Возврат части наличных — требуется проверка контекста
+    requires_rule_id: true
+    allowed_rule_ids: []
+    limitations: Сам возврат части суммы не доказывает нарушение; подтвержденного универсального основания нет.
+    observation_only: true
+  UNATTENDED_ITEMS:
+    name: Оставленные документы или предметы — требуется проверка контекста
+    requires_rule_id: true
+    allowed_rule_ids:
+    - CASH_KEYS
+    - IS_PAPER_PROTECTION
+    limitations: Сначала установить, что это регулируемые ценности, ключи или документы с защищаемой информацией.
+rules:
+  CASH_ID_IN:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 19 пп. 1)
+    rule_text: 'Возможное основание; применимость требует проверки. При приеме наличных предусмотрена визуальная
+      идентификация по удостоверению личности либо данным сервиса цифровых документов. Ограничения: Отсутствие бумажного
+      документа в кадре не доказывает отсутствие идентификации; распознавание лиц не используется.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Наблюдается прием наличных; видна полная последовательность обслуживания.
+    - Проверено, что идентификация не выполнена ранее или через цифровые документы.
+    limitations: Отсутствие бумажного документа в кадре не доказывает отсутствие идентификации; распознавание лиц
+      не используется.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_ID_OUT:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 31 пп. 1)
+    rule_text: 'Возможное основание; применимость требует проверки. При выдаче наличных предусмотрена идентификация
+      по данным документа либо сервиса цифровых документов. Ограничения: Не определять личность и принадлежность
+      документа по лицам; отсутствие видимого документа недостаточно.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Достоверно установлен контекст выдачи наличных и доступен полный эпизод.
+    limitations: Не определять личность и принадлежность документа по лицам; отсутствие видимого документа недостаточно.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_STORAGE:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '20'
+    rule_text: 'Возможное основание; применимость требует проверки. Ранее принятые наличные хранятся в предназначенных
+      для этого устройствах, закрывающихся на ключ. Ограничения: Деньги текущего клиента во время операции и краткое
+      открытие устройства для работы сами по себе не означают нарушение; состояние замка нельзя угадывать.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Прослеживается принадлежность денег завершенной операции.
+    - Видно, где деньги остаются после ее завершения.
+    limitations: Деньги текущего клиента во время операции и краткое открытие устройства для работы сами по себе
+      не означают нарушение; состояние замка нельзя угадывать.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_PRESENT:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 20, абз. 1
+    rule_text: 'Возможное основание; применимость требует проверки. Прием и пересчет наличных выполняются в присутствии
+      клиента. Ограничения: Нужно различать прием, выдачу и последующий внутренний пересчет; отсутствие клиента
+      в ограниченном ракурсе не доказывает его уход.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Виден прием или пересчет и уход клиента до его завершения.
+    limitations: Нужно различать прием, выдачу и последующий внутренний пересчет; отсутствие клиента в ограниченном
+      ракурсе не доказывает его уход.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_COUNT:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 19 пп. 2)
+    rule_text: 'Возможное основание; применимость требует проверки. При приеме банкнот предусмотрен полистный пересчет
+      и проверка подлинности и платежности. Ограничения: Не требуется именно ручной пересчет; работа машины и предшествующие
+      действия могут быть вне видимости.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Полностью виден прием банкнот и дальнейшее перемещение; исключен пересчет вне кадра.
+    limitations: Не требуется именно ручной пересчет; работа машины и предшествующие действия могут быть вне видимости.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_EQUIPMENT:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '41'
+    rule_text: 'Возможное основание; применимость требует проверки. Оборудование для пересчета и сортировки должно
+      проверять не менее двух машиночитаемых защитных признаков. Ограничения: По обычному видео невозможно установить
+      число проверяемых признаков; не считать отсутствие видимого детектора доказательством.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждены назначение и технические характеристики оборудования.
+    limitations: По обычному видео невозможно установить число проверяемых признаков; не считать отсутствие видимого
+      детектора доказательством.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_SUSPECT:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 57, 59
+    rule_text: 'Возможное основание; применимость требует проверки. Платежность проверяется; при обнаружении сомнительных
+      банкнот предусмотрено оформление приема на экспертизу. Ограничения: Отбраковка машиной не равна подделке;
+      видео не подтверждает бухгалтерские проводки или последующее направление на экспертизу.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Статус банкнот как сомнительных подтвержден независимо от простого отбраковывания машиной.
+    - Доступен относящийся к обработке сомнительных банкнот эпизод.
+    limitations: Отбраковка машиной не равна подделке; видео не подтверждает бухгалтерские проводки или последующее
+      направление на экспертизу.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_LEAVE:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '22'
+    rule_text: 'Возможное основание; применимость требует проверки. Кассир не покидает рабочее место до окончания
+      обслуживания клиента. Ограничения: Вставание, движение внутри рабочего места или уход после завершения обслуживания
+      недостаточны; это не норма о блокировке компьютера.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Кассир действительно покидает рабочее место, а обслуживание того же клиента еще продолжается.
+    limitations: Вставание, движение внутри рабочего места или уход после завершения обслуживания недостаточны;
+      это не норма о блокировке компьютера.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_PERSONAL:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '12'
+    rule_text: 'Возможное основание; применимость требует проверки. Личные вещи работников хранятся вне кассового
+      узла; предусмотрены отдельные разрешенные исключения. Ограничения: Исключения: лекарства, медицинские изделия,
+      средства связи без фото- и видеофиксации. Принадлежность и функции устройства нельзя угадывать.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлено, что предмет личный и оставлен на хранение в кассовом узле.
+    limitations: 'Исключения: лекарства, медицинские изделия, средства связи без фото- и видеофиксации. Принадлежность
+      и функции устройства нельзя угадывать.'
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_KEYS:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 76, 80
+    rule_text: 'Возможное основание; применимость требует проверки. Ключи от кладовой или сейфовой комнаты хранятся
+      у ответственных лиц; порядок обращения с ключами и ценностями определяется внутренними документами. Ограничения:
+      Любой предмет, похожий на ключ, не доказывает нарушение; ключи кассового устройства и кладовой имеют разные
+      основания.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлено назначение ключей и применимость банковского порядка хранения.
+    limitations: Любой предмет, похожий на ключ, не доказывает нарушение; ключи кассового устройства и кладовой
+      имеют разные основания.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  CASH_BAG:
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 24 пп. 3), 4); 25
+    rule_text: 'Возможное основание; применимость требует проверки. При приеме инкассаторской сумки проверяются
+      ее целостность и пломбирование; нарушенная целостность требует вскрытия и пересчета при инкассаторе. Ограничения:
+      Нужен полный эпизод и различимая пломба; скрытые камерой проверки не считать отсутствующими.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтвержден прием инкассаторской сумки, а не обычной личной сумки; видны сумка и действия с ней.
+    limitations: Нужен полный эпизод и различимая пломба; скрытые камерой проверки не считать отсутствующими.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_231
+    evidence_mode: video_and_context
+  PREMISES_ACCESS:
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    punkt: 8; 16 пп. 1)
+    rule_text: 'Возможное основание; применимость требует проверки. Кассовый узел изолируется закрывающимся служебным
+      входом; касса имеет отдельный вход с запираемой дверью. Ограничения: Требование к устройству помещения не
+      устанавливает безусловного запрета кратковременно открывать дверь. Для п. 16 действует временная редакция
+      до 01.01.2027; после этой даты перепроверить.'
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    required_observations:
+    - Установлено назначение помещения и входа; видны условия доступа.
+    limitations: Требование к устройству помещения не устанавливает безусловного запрета кратковременно открывать
+      дверь. Для п. 16 действует временная редакция до 01.01.2027; после этой даты перепроверить.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_14
+    evidence_mode: video_and_context
+  COLLECTION_ACCESS:
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    punkt: '21'
+    rule_text: 'Возможное основание; применимость требует проверки. Для инкассации оборудуется бокс или площадка
+      с ограничением доступа и просмотра третьими лицами. Ограничения: Не распространять автоматически на операционный
+      зал и обычную кассовую операцию.'
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    required_observations:
+    - Достоверно наблюдается инкассация в зоне погрузки, а не обычное обслуживание клиента.
+    limitations: Не распространять автоматически на операционный зал и обычную кассовую операцию.
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    source_id: NBRK_14
+    evidence_mode: video_and_context
+  CASH_RECEIPT_IN:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 19 пп. 6)
+    rule_text: 'Возможное основание; применимость требует проверки. После приема наличных клиенту выдается подтверждающий
+      документ. Ограничения: Отсутствие видимой бумаги не исключает иной допустимый способ выдачи; короткий или
+      обрезанный эпизод недостаточен.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Виден завершенный прием наличных и весь способ передачи подтверждающего документа.
+    limitations: Отсутствие видимой бумаги не исключает иной допустимый способ выдачи; короткий или обрезанный эпизод
+      недостаточен.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_RECEIPT_OUT:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 31 пп. 6)
+    rule_text: 'Возможное основание; применимость требует проверки. После выдачи наличных клиент получает подтверждающий
+      документ. Ограничения: Нельзя считать бумажный документ единственным возможным подтверждением без проверки
+      применимого порядка.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлена выдача наличных; проверена полная последовательность выдачи подтверждения.
+    limitations: Нельзя считать бумажный документ единственным возможным подтверждением без проверки применимого
+      порядка.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_COUNT_OUT:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 31 пп. 4); 32
+    rule_text: 'Возможное основание; применимость требует проверки. Наличные пересчитываются при клиенте; для неповрежденной
+      упаковки предусмотрены исключения из полистного пересчета. Ограничения: Неповрежденные пачки и корешки могут
+      выдаваться по обозначенной сумме без полистного пересчета; не требовать ручной пересчет всегда.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Виден контекст выдачи и состояние упаковки банкнот либо монет.
+    limitations: Неповрежденные пачки и корешки могут выдаваться по обозначенной сумме без полистного пересчета;
+      не требовать ручной пересчет всегда.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_MULTI_DEPOSIT:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '21'
+    rule_text: 'Возможное основание; применимость требует проверки. При нескольких приходных документах прием выполняется
+      отдельно по каждому документу. Ограничения: По кучкам банкнот нельзя установить число документов или принадлежность
+      суммы; нужны читаемые документы либо сведения операции.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждено наличие нескольких приходных документов и связь сумм с ними.
+    limitations: По кучкам банкнот нельзя установить число документов или принадлежность суммы; нужны читаемые документы
+      либо сведения операции.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_HANDOVER:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '23'
+    rule_text: 'Возможное основание; применимость требует проверки. Принятые наличные формируются, упаковываются
+      и передаются заведующему по банковскому порядку. Ограничения: Передача в течение дня может происходить несколько
+      раз; видео не устанавливает нарушение сроков само по себе.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Известны стадия передачи, роль получателя и применимый внутренний порядок.
+    limitations: Передача в течение дня может происходить несколько раз; видео не устанавливает нарушение сроков
+      само по себе.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_END_DAY:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '37'
+    rule_text: 'Возможное основание; применимость требует проверки. Остаток в конце дня пересчитывается, сортируется,
+      упаковывается и передается заведующему с документами. Ограничения: Уход кассира не доказывает конец дня; нужно
+      учитывать внутренний порядок и обработку вне кадра.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтвержден именно конец рабочего дня и виден полный относящийся к остатку эпизод.
+    limitations: Уход кассира не доказывает конец дня; нужно учитывать внутренний порядок и обработку вне кадра.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_RECOUNT_SUPERVISION:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '42'
+    rule_text: 'Возможное основание; применимость требует проверки. Внутренний пересчет, сортировка и упаковка выполняются
+      при контролирующем работнике. Ограничения: Обычный прием и выдача клиенту прямо исключены; видимых людей нельзя
+      автоматически считать контролерами либо посторонними.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлено, что это внутренняя операция, а не прием или выдача клиенту; подтверждены роли присутствующих.
+    limitations: Обычный прием и выдача клиенту прямо исключены; видимых людей нельзя автоматически считать контролерами
+      либо посторонними.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_SORTING:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '43'
+    rule_text: 'Возможное основание; применимость требует проверки. Наличные сортируются по номиналам и установленным
+      категориям состояния. Ограничения: Общий план не позволяет надежно установить год выпуска, ветхость или платежность;
+      нужны дополнительные сведения.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Достоверно установлены номиналы и состояние денег; видна стадия сортировки.
+    limitations: Общий план не позволяет надежно установить год выпуска, ветхость или платежность; нужны дополнительные
+      сведения.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_PACK_SEPARATE:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '45'
+    rule_text: 'Возможное основание; применимость требует проверки. Годные деньги упаковываются отдельно от ветхих,
+      дефектных и выводимых из обращения. Ограничения: Не выводить состояние банкноты из цвета пачки или сбоя машины;
+      промежуточная раскладка не равна окончательной упаковке.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждены категории денег и их объединение в одну конечную упаковку.
+    limitations: Не выводить состояние банкноты из цвета пачки или сбоя машины; промежуточная раскладка не равна
+      окончательной упаковке.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_NOTE_BAND:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '46'
+    rule_text: 'Возможное основание; применимость требует проверки. Корешки формируются из ста банкнот одного номинала
+      и снабжаются бандеролью с реквизитами. Ограничения: Число листов нельзя угадывать по толщине; промежуточная
+      заготовка не равна готовому корешку.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Достоверны стадия формирования, номинал, число листов и различимость бандероли.
+    limitations: Число листов нельзя угадывать по толщине; промежуточная заготовка не равна готовому корешку.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_NOTE_BUNDLE:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '47'
+    rule_text: 'Возможное основание; применимость требует проверки. Полная пачка формируется из десяти корешков
+      одного номинала и имеет накладки с реквизитами. Ограничения: Для неполных и сборных пачек действуют другие
+      правила; отсутствие читаемых реквизитов на общем плане не доказательство.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждено, что формируется именно полная пачка, различимы корешки и накладки.
+    limitations: Для неполных и сборных пачек действуют другие правила; отсутствие читаемых реквизитов на общем
+      плане не доказательство.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_BUNDLE_SEAL:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '48'
+    rule_text: 'Возможное основание; применимость требует проверки. Предусмотрены скрепление и пломбирование шпагатом
+      либо запайка полиэтиленового пакета с маркировкой. Ограничения: Не требовать одновременно оба способа; дефект
+      или отсутствие пломбы должны быть различимы.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлен способ упаковки и видна завершенная упаковка с зоной пломбы либо шва.
+    limitations: Не требовать одновременно оба способа; дефект или отсутствие пломбы должны быть различимы.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_MERGE_RECOUNT:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '49'
+    rule_text: 'Возможное основание; применимость требует проверки. Банкноты, переданные для объединения, полистно
+      пересчитываются перед формированием упаковки. Ограничения: Обычное перемещение полной пачки не является объединением;
+      пересчет может происходить машиной.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждена передача остатков для объединения и полностью виден пересчет.
+    limitations: Обычное перемещение полной пачки не является объединением; пересчет может происходить машиной.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_MIXED_BUNDLE:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '50'
+    rule_text: 'Возможное основание; применимость требует проверки. Неполные и сборные пачки имеют установленное
+      оформление; для разных номиналов предусмотрена маркировка. Ограничения: Не считать смешанные номиналы сами
+      по себе нарушением: сборная пачка разрешена.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Виден окончательный состав пачки и читаемая маркировка.
+    limitations: 'Не считать смешанные номиналы сами по себе нарушением: сборная пачка разрешена.'
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_COIN_SEAL:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '52'
+    rule_text: 'Возможное основание; применимость требует проверки. Горловина мешка прошивается с ярлыком, завязывается
+      и пломбируется. Ограничения: Частично скрытая или еще не завершенная упаковка не подтверждает отсутствие требуемого
+      элемента.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Установлено, что это готовый мешок с монетами; видны горловина, ярлык и пломба.
+    limitations: Частично скрытая или еще не завершенная упаковка не подтверждает отсутствие требуемого элемента.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_COIN_LABEL:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '53'
+    rule_text: 'Возможное основание; применимость требует проверки. Ярлык содержит реквизиты; для дефектных и сборных
+      монет предусмотрена дополнительная маркировка. Ограничения: Нельзя выводить отсутствие реквизита из неразборчивого
+      изображения.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Ярлык читаем, подтвержден вид содержимого и завершение упаковки.
+    limitations: Нельзя выводить отсутствие реквизита из неразборчивого изображения.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_ATM_CASSETTE:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '55'
+    rule_text: 'Возможное основание; применимость требует проверки. Кассеты для загрузки автоматических устройств
+      закрываются на ключ и опечатываются. Ограничения: Выбор вида пломбы остается банку; открытая кассета во время
+      загрузки сама по себе допустима.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждена подготовка кассеты к загрузке, видны закрытие и опечатывание.
+    limitations: Выбор вида пломбы остается банку; открытая кассета во время загрузки сама по себе допустима.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_COUNTERFEIT_RETURN:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 60, 61
+    rule_text: 'Возможное основание; применимость требует проверки. Для денег с признаками подделки предусмотрены
+      сообщение правоохранительным органам и невозврат клиенту. Ограничения: Отбраковка машиной не доказывает признаки
+      подделки; не объявлять лицо мошенником. По видео нельзя проверить сообщение органам.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Признаки подделки подтверждены допустимыми внешними сведениями; прослеживается передача именно этих денег.
+    limitations: Отбраковка машиной не доказывает признаки подделки; не объявлять лицо мошенником. По видео нельзя
+      проверить сообщение органам.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_VAULT_ACCESS:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '75'
+    rule_text: 'Возможное основание; применимость требует проверки. Допуск предусмотрен для ответственных лиц либо
+      по распоряжению с сопровождением. Ограничения: По внешности не определять полномочия и должность; несколько
+      человек в помещении не означают нарушение.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждено назначение помещения, полномочия вошедшего и наличие либо отсутствие требуемого сопровождения.
+    limitations: По внешности не определять полномочия и должность; несколько человек в помещении не означают нарушение.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  CASH_VAULT_STORAGE:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '77'
+    rule_text: 'Возможное основание; применимость требует проверки. В кладовой или сейфовой комнате деньги хранятся
+      раздельно по валютам и номиналам. Ограничения: Временная рабочая раскладка и сборная пачка вне контекста хранения
+      недостаточны.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждено хранение именно в кладовой или сейфовой комнате, различимы валюта и номиналы.
+    limitations: Временная рабочая раскладка и сборная пачка вне контекста хранения недостаточны.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_BAG_INTEGRITY:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '93'
+    rule_text: 'Возможное основание; применимость требует проверки. Для инкассации используется сохраняющая содержимое
+      упаковка, вскрытие которой оставляет видимые следы. Ограничения: Допустимы другие приспособления по внутреннему
+      порядку: сейф-пакеты, кассеты, кейсы и контейнеры; не требовать только тканевую сумку.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтвержден инкассаторский контекст и видимые свойства либо повреждения завершенной упаковки.
+    limitations: 'Допустимы другие приспособления по внутреннему порядку: сейф-пакеты, кассеты, кейсы и контейнеры;
+      не требовать только тканевую сумку.'
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_PACK_DOCUMENT:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 105, 106
+    rule_text: 'Возможное основание; применимость требует проверки. Деньги и ценности для инкассации упаковываются
+      с оформлением препроводительного документа. Ограничения: Короткое видео не доказывает отсутствие документа;
+      его оформление может быть вне кадра.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждено завершение подготовки к инкассации и проверены документы.
+    limitations: Короткое видео не доказывает отсутствие документа; его оформление может быть вне кадра.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_PICKUP_CHECK:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '107'
+    rule_text: 'Возможное основание; применимость требует проверки. При получении сумки проверяются ее целостность,
+      пломбирование и предусмотренные документы. Ограничения: Назначение сотрудника нельзя выводить по лицу; пломба
+      и действия должны быть видимы.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждена роль сборщика и виден полный прием сумки.
+    limitations: Назначение сотрудника нельзя выводить по лицу; пломба и действия должны быть видимы.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_HANDOVER_CHECK:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '108'
+    rule_text: 'Возможное основание; применимость требует проверки. При передаче от сборщика старший проверяет сумку
+      по правилам приема. Ограничения: Не применять к любому обмену сумкой между людьми; роли требуют внешнего подтверждения.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждены роли, передача сумки и весь эпизод повторной проверки.
+    limitations: Не применять к любому обмену сумкой между людьми; роли требуют внешнего подтверждения.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_CREW:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: 98, 99
+    rule_text: 'Возможное основание; применимость требует проверки. Общее правило предусматривает минимум трех работников;
+      в предусмотренных случаях разрешена бригада из двух. Ограничения: Камера может не показывать водителя; онлайн-видеонаблюдение
+      или специальные контейнеры допускают исключения. Два человека в кадре недостаточны.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Известен полный состав бригады, включая водителя, и проверены исключения пункта 99.
+    limitations: Камера может не показывать водителя; онлайн-видеонаблюдение или специальные контейнеры допускают
+      исключения. Два человека в кадре недостаточны.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  COLLECTION_PROTECTION:
+    source_id: NBRK_231
+    document: Постановление Правления НБРК от 29.11.2019 № 231 — Правила осуществления кассовых операций и операций
+      по инкассации банкнот, монет и ценностей
+    punkt: '103'
+    rule_text: 'Возможное основание; применимость требует проверки. Бригада обеспечивается экипировкой, средствами
+      защиты, включая бронежилеты и каски, и служебным оружием. Ограничения: Скрытое одеждой оснащение нельзя считать
+      отсутствующим; по внешности не устанавливать наличие разрешения на оружие.'
+    url: https://adilet.zan.kz/rus/docs/V1900019680
+    required_observations:
+    - Подтверждены инкассаторская роль, исполнение задания и различимость экипировки.
+    limitations: Скрытое одеждой оснащение нельзя считать отсутствующим; по внешности не устанавливать наличие разрешения
+      на оружие.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  PREMISES_TRANSFER:
+    source_id: NBRK_14
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    punkt: 16 пп. 4)
+    rule_text: 'Возможное основание; применимость требует проверки. Касса оборудуется специальным устройством передачи
+      денег с исправным механизмом управления и фиксации внутри кассы. Ограничения: Это требование к оборудованию;
+      отдельная передача предмета не доказывает его неисправность. Проверить временную редакцию до 01.01.2027.'
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    required_observations:
+    - Установлено устройство кассы и виден механизм либо подтвержден его дефект.
+    limitations: Это требование к оборудованию; отдельная передача предмета не доказывает его неисправность. Проверить
+      временную редакцию до 01.01.2027.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  PREMISES_PARTITIONS:
+    source_id: NBRK_14
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    punkt: 16 пп. 5)
+    rule_text: 'Возможное основание; применимость требует проверки. Между кассами предусматриваются перегородки,
+      отделяющие рабочие места. Ограничения: Ракурс может скрывать перегородку; требование не распространять на
+      любой офисный стол. Перепроверить редакцию к 01.01.2027.'
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    required_observations:
+    - Полностью видны границы соседних касс и подтвержден тип помещения.
+    limitations: Ракурс может скрывать перегородку; требование не распространять на любой офисный стол. Перепроверить
+      редакцию к 01.01.2027.
+    evidence_mode: video_and_context
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  PREMISES_VIDEO:
+    source_id: NBRK_14
+    document: Постановление Правления НБРК от 24.02.2020 № 14 — Правила организации охраны и устройства помещений
+      банков
+    punkt: 16 пп. 6)
+    rule_text: 'Возможное основание; применимость требует проверки. Касса оборудуется камерами видеонаблюдения.
+      Ограничения: Отсутствие камеры в кадре не означает ее отсутствие; по записи нельзя доказать неисправность
+      всей системы. Перепроверить редакцию к 01.01.2027.'
+    url: https://adilet.zan.kz/rus/docs/V2000020075
+    required_observations:
+    - Есть сведения об оснащении и покрытии помещения, а не только один ракурс.
+    limitations: Отсутствие камеры в кадре не означает ее отсутствие; по записи нельзя доказать неисправность всей
+      системы. Перепроверить редакцию к 01.01.2027.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  IS_SESSION_TIMEOUT:
+    source_id: ARDFM_53
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    punkt: 71 пп. 9); 72
+    rule_text: 'Возможное основание; применимость требует проверки. После более 30 минут неактивности сеанс автоматически
+      завершается либо рабочая станция или ноутбук блокируется. Ограничения: Короткий уход не устанавливает нарушение;
+      экран может оставаться включенным после завершения сеанса. Нужны длительное наблюдение и журналы системы.
+      Проверить исключения пункта 72: интеграция аутентификации с соответствующей пункту 71 системой либо функции
+      одной системы, минимизирующие риск неавторизованного доступа в другой. Не считать эти исключения установленными
+      по видео.'
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    required_observations:
+    - Доказана неактивность более 30 минут и отсутствие как завершения сеанса, так и блокировки; исключены разрывы
+      наблюдения.
+    - Подтверждена применимость пункта 71 и проверены оба исключения пункта 72 по архитектуре и настройкам систем.
+    limitations: 'Короткий уход не устанавливает нарушение; экран может оставаться включенным после завершения сеанса.
+      Нужны длительное наблюдение и журналы системы. Проверить исключения пункта 72: интеграция аутентификации с
+      соответствующей пункту 71 системой либо функции одной системы, минимизирующие риск неавторизованного доступа
+      в другой. Не считать эти исключения установленными по видео.'
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+    applicability_exceptions:
+    - clause: 72 пп. 1)
+      condition: Интеграция в части аутентификации с информационной системой, соответствующей пункту 71.
+    - clause: 72 пп. 2)
+      condition: Функции одной информационной системы минимизируют риск неавторизованного доступа в другой.
+  IS_PASSWORD_TRANSFER:
+    source_id: ARDFM_53
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    punkt: 73 пп. 5)
+    rule_text: 'Возможное основание; применимость требует проверки. Процесс управления учетными записями предусматривает
+      недопущение неправомерной передачи паролей. Ограничения: Жесты, разговор или передача бумаги не доказывают
+      передачу пароля; не собирать и не сохранять секреты.'
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    required_observations:
+    - Факт передачи именно пароля подтвержден допустимыми сведениями.
+    limitations: Жесты, разговор или передача бумаги не доказывают передачу пароля; не собирать и не сохранять секреты.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  IS_ACCOUNT_SHARING:
+    source_id: ARDFM_53
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    punkt: 73 пп. 6)
+    rule_text: 'Возможное основание; применимость требует проверки. Работа под чужой учетной записью не допускается,
+      кроме согласованного случая обеспечения непрерывности с точной идентификацией пользователя. Ограничения: Замена
+      сотрудника у компьютера не доказывает чужую учетную запись; необходимы журналы и сведения об одобренном доступе.'
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    required_observations:
+    - Установлены владелец учетной записи и фактический пользователь без распознавания лиц; проверено исключение.
+    limitations: Замена сотрудника у компьютера не доказывает чужую учетную запись; необходимы журналы и сведения
+      об одобренном доступе.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  IS_PAPER_PROTECTION:
+    source_id: ARDFM_53
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    punkt: '76'
+    rule_text: 'Возможное основание; применимость требует проверки. При работе с защищаемой информацией на бумаге
+      применяются установленные организационные либо технические меры. Ограничения: Любой лист на столе не является
+      нарушением; норма не устанавливает универсальный запрет оставлять любую бумагу.'
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    required_observations:
+    - Подтверждено, что документ содержит защищаемую информацию, и известны установленные банком меры.
+    limitations: Любой лист на столе не является нарушением; норма не устанавливает универсальный запрет оставлять
+      любую бумагу.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  IS_EXTERNAL_MEDIA:
+    source_id: ARDFM_53
+    document: Постановление Правления АРРФР от 03.04.2026 № 53 — Требования к обеспечению информационной безопасности
+      банков
+    punkt: '75'
+    rule_text: 'Возможное основание; применимость требует проверки. Для внешних носителей применяются организационные
+      либо программно-технические меры защиты информации. Ограничения: Подключение USB само по себе не запрещено
+      этой нормой; шифрование и разрешение не видны по видео.'
+    url: https://adilet.zan.kz/rus/docs/V2600038336
+    required_observations:
+    - Подтверждены операция с защищаемой информацией и отсутствие требуемых банковских мер.
+    limitations: Подключение USB само по себе не запрещено этой нормой; шифрование и разрешение не видны по видео.
+    evidence_mode: video_and_records
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  AML_DUE_DILIGENCE:
+    source_id: AML_191
+    document: Закон РК от 28.08.2009 № 191-IV — О противодействии легализации доходов, финансированию терроризма
+      и финансированию распространения оружия массового уничтожения
+    punkt: ст. 5 п. 1
+    rule_text: 'Возможное основание; применимость требует проверки. Субъекты финансового мониторинга принимают меры
+      надлежащей проверки клиентов, их представителей и бенефициарных собственников. Ограничения: Контекстное основание.
+      Видеозапись не показывает все проверки, предшествующую идентификацию, цифровые документы и применимые исключения;
+      пороги по неполному извлечению не задаются.'
+    url: https://adilet.zan.kz/rus/docs/Z090000191_
+    required_observations:
+    - Подтверждено, что организация и операция подпадают под требования; доступны сведения о проведенной проверке.
+    limitations: Контекстное основание. Видеозапись не показывает все проверки, предшествующую идентификацию, цифровые
+      документы и применимые исключения; пороги по неполному извлечению не задаются.
+    evidence_mode: video_and_records
+    context_only: true
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+  BANK_SECRECY:
+    source_id: BANKING_258
+    document: Закон РК от 16.01.2026 № 258-VIII — О банках и банковской деятельности в Республике Казахстан
+    punkt: ст. 69 пп. 1–4
+    rule_text: 'Возможное основание; применимость требует проверки. Банк обеспечивает банковскую тайну; раскрытие
+      допускается клиенту, с предусмотренным согласием либо по законным основаниям. Ограничения: Контекстное основание.
+      Лист на столе, видимый монитор или человек рядом не доказывают раскрытие или отсутствие полномочий. Не извлекать
+      личные данные в облако; необходима проверка согласий и исключений.'
+    url: https://adilet.zan.kz/rus/docs/Z2600000258
+    required_observations:
+    - Подтверждены охраняемое содержание информации, факт доступа или раскрытия и отсутствие применимого согласия
+      либо законного основания.
+    limitations: Контекстное основание. Лист на столе, видимый монитор или человек рядом не доказывают раскрытие
+      или отсутствие полномочий. Не извлекать личные данные в облако; необходима проверка согласий и исключений.
+    evidence_mode: video_and_records
+    context_only: true
+    verified_on: '2026-10-18'
+    review_status: source_checked_team_review_required
+coverage:
+  scope: Кассовые операции, инкассация, хранение, помещения и ограниченный набор требований ИБ; не полный свод законодательства.
+  new_type_policy: Новый type_code требует явного rule_id и проверки условий; добавление в каталог не реализует
+    распознавание видео.
+  not_video_provable:
+  - Бухгалтерские проводки, недостача или сумма ущерба без учетных данных
+  - Умысел, виновность, мошенничество и иная уголовная квалификация
+  - Принадлежность учетной записи, полномочия, внутренние разрешения без дополнительных сведений
+  - Подлинность банкноты по общему ракурсу
+  - Состояние замка, пломбы или реквизита, скрытых камерой
+  excluded_claims:
+  - Свет или счетная машина оставлены включенными сами по себе
+  - Отсутствие просмотра обеих сторон удостоверения как самостоятельное нарушение
+  - Любой открытый сейф или дверь без контекста
+  - Безусловный запрет любого телефона без проверки исключений и характеристик
+  class_taxonomy: Сохранены V1–V14 и V1b; только кандидаты правил, а не автоматические юридические выводы.
+classifications:
+  V1:
+    name: Возможное отсутствие идентификации
+    type_code: ID
+    candidate_rule_ids:
+    - CASH_ID_IN
+    - CASH_ID_OUT
+    status: conditional
+    conditions:
+    - Установить прием или выдачу наличных и применимую процедуру.
+    - Проверить весь эпизод, ранее выполненную идентификацию и цифровые документы.
+    limitations: Отсутствие бумажного удостоверения в кадре недостаточно; лица не распознавать.
+  V1b:
+    name: Возможное несоответствие процедуры идентификации
+    type_code: THIRD
+    candidate_rule_ids:
+    - CASH_ID_IN
+    - CASH_ID_OUT
+    status: conditional
+    conditions:
+    - Подтвердить, чья идентификация требуется и какие действия выполнены, без распознавания лиц.
+    limitations: Передача документа другим человеком не устанавливает его владельца или отсутствие законного представительства.
+  V2:
+    name: Деньги предыдущей операции вне хранения
+    type_code: TABLE
+    candidate_rule_ids:
+    - CASH_STORAGE
+    status: conditional
+    conditions:
+    - Проследить деньги завершенной операции и отличить их от денег текущего клиента.
+    limitations: Совместная видимость нескольких пачек не доказывает смешивание клиентов.
+  V3:
+    name: Принятые наличные оставлены вне устройства хранения
+    type_code: TABLE
+    candidate_rule_ids:
+    - CASH_STORAGE
+    status: conditional
+    conditions:
+    - Подтвердить завершение операции и статус денег как ранее принятых; видны место хранения и уход.
+    limitations: Не подменять хранением текущую рабочую обработку денег; сам уход не подтверждает все условия.
+  V4:
+    name: Возможное несоблюдение хранения в кассовом устройстве
+    type_code: SAFE
+    candidate_rule_ids:
+    - CASH_STORAGE
+    status: conditional
+    conditions:
+    - Различить устройство на рабочем месте и кладовую/сейфовую комнату; установить хранение ранее принятых денег.
+    limitations: Открытие для операции допустимо; состояние замка нельзя угадать. Пункты о кладовой не применять
+      автоматически к ящику кассира.
+  V5:
+    name: Возможное нарушение обращения с ключами
+    type_code: KEYS
+    candidate_rule_ids:
+    - CASH_KEYS
+    status: conditional
+    conditions:
+    - Установить назначение ключа, ответственного и применимый порядок хранения.
+    limitations: Не считать любой похожий предмет ключом; требования к кладовой и кассовому устройству различаются.
+  V6:
+    name: Прием или пересчет без присутствия клиента
+    type_code: INCOMPLETE
+    candidate_rule_ids:
+    - CASH_PRESENT
+    status: conditional
+    conditions:
+    - Подтвердить прием/пересчет именно денег клиента и фактический уход до завершения.
+    limitations: Отличать от внутреннего пересчета и отсутствия клиента только в ракурсе камеры.
+  V7:
+    name: Уход до окончания обслуживания
+    type_code: LEAVE
+    candidate_rule_ids:
+    - CASH_LEAVE
+    status: conditional
+    conditions:
+    - Подтвердить фактический уход с рабочего места при незавершенном обслуживании того же клиента.
+    limitations: Вставание, движение внутри места или уход после завершения не достаточны.
+  V8:
+    name: Хранение личных вещей в кассовом узле
+    type_code: PERSONAL
+    candidate_rule_ids:
+    - CASH_PERSONAL
+    status: conditional
+    conditions:
+    - Подтвердить личную принадлежность, хранение и нахождение в кассовом узле.
+    limitations: Учитывать лекарства, медицинские изделия и разрешенные средства связи без фото-/видеофиксации;
+      функции устройства не угадывать.
+  V9:
+    name: Возможное отсутствие пересчета или несоответствие оборудования
+    type_code: NOCOUNT
+    candidate_rule_ids:
+    - CASH_COUNT
+    - CASH_EQUIPMENT
+    status: conditional
+    conditions:
+    - Раздельно проверить полный процесс приема банкнот и технические требования к оборудованию.
+    limitations: Отсутствие видимой машины не равно отсутствию пересчета; характеристики оборудования требуют внешних
+      сведений.
+  V10:
+    name: Возможное несоблюдение обращения с сомнительными банкнотами
+    type_code: REJECT
+    candidate_rule_ids:
+    - CASH_SUSPECT
+    status: conditional
+    conditions:
+    - Независимо подтвердить статус сомнительных банкнот и проследить их дальнейшую обработку.
+    limitations: Отбраковка машиной не равна сомнительности или подделке; не утверждать неисполнение экспертизы
+      по короткому эпизоду.
+  V11:
+    name: Возможное несоответствие входа кассы
+    type_code: DOOR
+    candidate_rule_ids:
+    - PREMISES_ACCESS
+    status: conditional
+    conditions:
+    - Подтвердить назначение помещения и входа, условия изоляции и доступа.
+    limitations: Норма об оборудовании запираемой дверью не означает запрета любого открытия; п. 16 до 01.01.2027
+      действует во временной редакции.
+  V12:
+    name: Частичный возврат наличных — наблюдение для проверки
+    type_code: CASH_RETURN
+    candidate_rule_ids: []
+    status: observation_only
+    conditions:
+    - Установить вид операции, ее стадию и причину возврата; запросить недостающие сведения.
+    limitations: Возврат части суммы сам по себе не запрещен указанными общими процедурами. Не назначать закон по
+      формуле «не соответствует ни приему, ни выдаче». Не формировать нарушение только из этой метки.
+  V13:
+    name: Оставленные документы или предметы
+    type_code: UNATTENDED_ITEMS
+    candidate_rule_ids:
+    - CASH_KEYS
+    - IS_PAPER_PROTECTION
+    status: conditional
+    conditions:
+    - 'Подтвердить конкретную природу предмета: ключи/регулируемые ценности или бумага с защищаемыми данными; проверить
+      банковский порядок.'
+    limitations: Любая сумка, журнал или лист не являются автоматически регулируемыми ценностями. Для бумаги нужен
+      информационный контекст.
+  V14:
+    name: Возможное отсутствие завершения или блокировки сеанса
+    type_code: EXIT
+    candidate_rule_ids:
+    - IS_SESSION_TIMEOUT
+    status: records_required
+    conditions:
+    - Подтвердить более 30 минут неактивности и отсутствие как завершения сеанса, так и блокировки.
+    - Проверить применимость пункта 71 и исключения пункта 72 с использованием сведений системы.
+    limitations: Короткий уход и включенный экран недостаточны. Не утверждать нарушение неизвестного внутреннего
+      регламента.

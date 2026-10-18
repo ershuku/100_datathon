@@ -1,0 +1,51 @@
+[project]
+name = "cashier-video-checker"
+version = "0.1.0"
+description = "Local AI service that flags possible cash-handling violations in cashier videos"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "fastapi==0.143.3",
+    "pillow==13.0.0",
+    "psutil==7.2.2",
+    "pydantic==2.14.1",
+    "pydantic-settings==2.16.0",
+    "python-multipart==0.0.32",
+    "pyyaml==6.0.3",
+    "uvicorn[standard]==0.54.0",
+]
+
+[project.optional-dependencies]
+# ML team: add the analyzer's runtime deps here with exact pins, e.g.
+#   uv add --optional ml "torch==2.x.y" --index pytorch-cu126=https://download.pytorch.org/whl/cu126
+# They are locked in uv.lock and installed into the Docker image (uv sync --extra ml).
+ml = [
+    "av==17.1.0",
+    "rfdetr==1.11.1",
+    "torch==2.14.1",
+    "torchvision==0.29.1",
+]
+
+[tool.uv]
+package = false
+
+# CUDA 12.6 wheels: run on drivers >= 560. Explicit, so only torch/torchvision come from it.
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+
+[dependency-groups]
+dev = [
+    "httpx==0.28.1",
+    "jsonschema==4.26.0",
+    "pytest==9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

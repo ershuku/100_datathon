@@ -1,0 +1,38 @@
+# Automatic HTTPS (Let's Encrypt) for {$DOMAIN}. Requires ports 80/443 open and a DNS A record.
+# Set TRUST_PROXY=xff in .env when running behind this proxy.
+{
+	servers {
+		timeouts {
+			read_body 10m
+		}
+	}
+}
+
+{$DOMAIN} {
+	request_body {
+		max_size 310MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Never write the jury API key into access logs.
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>headers>X-Api-Key delete
+				request>headers>Cookie delete
+			}
+		}
+	}
+
+	# Caddy overwrites X-Forwarded-For with the real client address (untrusted incoming values
+	# are not kept), so the right-most hop the app reads is always the true client.
+	reverse_proxy app:8000 {
+		flush_interval -1
+	}
+}
